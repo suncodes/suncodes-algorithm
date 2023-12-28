@@ -10,5 +10,6 @@
 
     <modules>
         <module>suncodes-algorithm-sword-offer</module>
+        <module>suncodes-data-structure-bilibili</module>
     </modules>
 </project>
