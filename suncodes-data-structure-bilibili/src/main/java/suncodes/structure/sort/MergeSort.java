@@ -7,61 +7,48 @@ import java.util.Arrays;
  */
 public class MergeSort {
     public static void main(String[] args) {
-        int[] rawArr = new int[]{1, 3, 5, 2, 4};
-        mergeSortByRecursion(rawArr);
+        int[] rawArr = new int[]{7, 1, 3, 5, 2, 4};
+        mergeSort(rawArr, 0, rawArr.length - 1);
         System.out.println(Arrays.toString(rawArr));
     }
 
-    public static void mergeSortByRecursion(int[] rawArr) {
-        if (rawArr.length == 0) {
+    public static void mergeSort(int[] rawArr, int left, int right) {
+        if (right <= left) {
             return;
         }
-        if (rawArr.length == 1) {
-            return;
-        }
-        if (rawArr.length == 2) {
-            int i = rawArr[0];
-            int i1 = rawArr[1];
-            if (i > i1) {
-                rawArr[0] = i1;
-                rawArr[1] = i;
-            }
-            return;
-        }
-        int index = rawArr.length / 2;
-        int[] leftArr = Arrays.copyOfRange(rawArr, 0, index);
-        int[] rightArr = Arrays.copyOfRange(rawArr, index, rawArr.length);
-        mergeSortByRecursion(leftArr);
-        mergeSortByRecursion(rightArr);
-        int[] copyArr = new int[leftArr.length + rightArr.length];
-        int i = 0;
-        int j = 0;
-        while (i < leftArr.length && j < rightArr.length) {
-            if (leftArr[i] < rightArr[j]) {
-                rawArr[i + j] = leftArr[i];
-                i++;
+        // 取中间值
+        int mid = (right + left) / 2;
+        mergeSort(rawArr, left, mid);
+        mergeSort(rawArr, mid + 1, right);
+        // 合并
+        merge(rawArr, left, mid, right);
+    }
+
+    /** 合并左子数组和右子数组 */
+    static void merge(int[] nums, int left, int mid, int right) {
+        // 左子数组区间为 [left, mid], 右子数组区间为 [mid+1, right]
+        // 创建一个临时数组 tmp ，用于存放合并后的结果
+        int[] tmp = new int[right - left + 1];
+        // 初始化左子数组和右子数组的起始索引
+        int i = left, j = mid + 1, k = 0;
+        // 当左右子数组都还有元素时，进行比较并将较小的元素复制到临时数组中
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                tmp[k++] = nums[i++];
             } else {
-                rawArr[i + j] = rightArr[j];
-                j++;
+                tmp[k++] = nums[j++];
             }
         }
-        if (i < leftArr.length) {
-            for (int k = i; k < leftArr.length; k++) {
-                rawArr[i + j] = leftArr[k];
-            }
+        // 将左子数组和右子数组的剩余元素复制到临时数组中
+        while (i <= mid) {
+            tmp[k++] = nums[i++];
         }
-        if (j < rightArr.length) {
-            for (int k = j; k < rightArr.length; k++) {
-                rawArr[i + k] = rightArr[k];
-            }
+        while (j <= right) {
+            tmp[k++] = nums[j++];
         }
-        System.out.println(Arrays.toString(leftArr));
-        System.out.println(Arrays.toString(rightArr));
-        System.out.println(Arrays.toString(rawArr));
-        System.out.println("=============================");
-    }
-
-    public static void mergeSortByLoop(int[] rawArr) {
-
+        // 将临时数组 tmp 中的元素复制回原数组 nums 的对应区间
+        for (k = 0; k < tmp.length; k++) {
+            nums[left + k] = tmp[k];
+        }
     }
 }
